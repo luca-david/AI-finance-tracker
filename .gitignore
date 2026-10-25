@@ -1,0 +1,29 @@
+# Byte-compiled / Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments (local dependencies)
+.venv/
+venv/
+env/
+ENV/
+
+# PyCharm / JetBrains IDE settings
+.idea/
+
+# Local databases (e.g., your local expenses.db)
+*.db
+*.sqlite3
+
+# Environment variables / API keys
+.env
+
+# Testing and coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
