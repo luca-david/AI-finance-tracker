@@ -51,3 +51,17 @@ def show_last_expense() -> None:
     table.add_row(str(row["id"]), row["description"], str(row["amount"]), row["category"] or "-", row["date"])
     console.print("[blue]Last expense[/blue]")
     console.print(table)
+
+@app.command("on-id")
+def show_expense_on_id(expense_id: int) -> None:
+    """Search for an expense in the database based on its id"""
+    # no check for id needed,typer handles checks automatically
+    row = db.get_expense_on_id(expense_id)
+    if not row:
+        console.print("[red]No expense exists for the given id[/red]")
+        return
+    table = Table("ID", "Description", "Amount", "Category", "Date")
+    table.add_row(str(row["id"]), row["description"], str(row["amount"]), row["category"] or "-", row["date"])
+    console.print("Searched for expense with id " + str(expense_id))
+    console.print(table)
+

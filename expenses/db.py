@@ -54,3 +54,9 @@ def get_last_expense() -> sqlite3.Row:
     with closing(get_conn()) as conn, conn:
         result = conn.execute(query).fetchone()
         return result
+
+def get_expense_on_id(expense_id: int) -> sqlite3.Row:
+    query = "SELECT * FROM expenses WHERE id = ?"
+    with closing(get_conn()) as conn, conn:
+        result = conn.execute(query, (expense_id,)).fetchone() #expense_id needs to be passed as a tuple or list with a single element
+        return result
