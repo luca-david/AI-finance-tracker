@@ -25,7 +25,7 @@ def add(description: str, amount: float, date: str | None = None) -> None:
     expense_id = db.add_expense(description, amount, date)
     console.print(f"[green]Added[/green] #{expense_id}: {description} ({amount:.2f})")
 
-@app.command("list")
+@app.command("all")
 def list_expenses(uncategorized: bool = False) -> None:
     """Show all expenses"""
     rows = db.list_expenses(only_uncategorized=uncategorized)
@@ -37,4 +37,17 @@ def list_expenses(uncategorized: bool = False) -> None:
         table.add_row(
             str(row["id"]), row["description"], str(row["amount"]), row["category"] or "-", row["date"]
         )
+    console.print("[green]All expenses[/green]")
+    console.print(table)
+
+@app.command("last")
+def show_last_expense() -> None:
+    """Get the last tracked expense"""
+    row = db.get_last_expense()
+    if not row:
+        console.print("[red]No expenses yet[/red]")
+        return
+    table = Table("ID", "Description", "Amount", "Category", "Date")
+    table.add_row(str(row["id"]), row["description"], str(row["amount"]), row["category"] or "-", row["date"])
+    console.print("[blue]Last expense[/blue]")
     console.print(table)

@@ -48,3 +48,9 @@ def set_category(expense_id: int, category: str) -> None:
         conn.execute(
             "UPDATE expenses SET category = ? WHERE id = ?", (category, expense_id)
         )
+
+def get_last_expense() -> sqlite3.Row:
+    query = "SELECT * FROM expenses ORDER BY id DESC"
+    with closing(get_conn()) as conn, conn:
+        result = conn.execute(query).fetchone()
+        return result
