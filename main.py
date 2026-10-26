@@ -1,7 +1,4 @@
-from expenses import db
+from expenses.cli import app
 
-
-for row in db.list_expenses():
-    expense = dict(row)
-    print(f"id: {row["id"]} | description: {row["description"]} | amount: {row["amount"]}")
-    print(expense)
+if __name__ == "__main__":
+    app()
