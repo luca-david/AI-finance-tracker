@@ -29,7 +29,7 @@ A terminal-based expense tracker written in Python. Expenses are stored locally 
 
 ```powershell
 # 1. Clone the repository and enter it
-git clone <your-repo-url>
+git clone https://github.com/luca-david/AI-finance-tracker.git
 cd finance-tracker
 
 # 2. Create and activate a virtual environment
