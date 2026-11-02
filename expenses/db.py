@@ -37,7 +37,7 @@ def list_expenses(only_uncategorized: bool = False) -> list[sqlite3.Row]: #retur
     query = "SELECT * FROM expenses"
     if only_uncategorized:
         query += " WHERE category IS NULL"
-    query += " ORDER BY date DESC, id DESC"
+    query += " ORDER BY date DESC"
     with closing(get_conn()) as conn, conn:
         result = conn.execute(query).fetchall()
         return result
@@ -60,3 +60,8 @@ def get_expense_on_id(expense_id: int) -> sqlite3.Row:
     with closing(get_conn()) as conn, conn:
         result = conn.execute(query, (expense_id,)).fetchone() #expense_id needs to be passed as a tuple or list with a single element
         return result
+
+def delete_expense(expense_id: int) -> None: #returns nothing since it is a delete method
+    query = "DELETE FROM expenses WHERE id = ?"
+    with closing(get_conn()) as conn, conn:
+        conn.execute(query, (expense_id,))

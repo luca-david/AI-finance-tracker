@@ -14,6 +14,15 @@ def main() -> None:
     """Runs before every command"""
     db.init_db()
 
+@app.command("all-commands")
+def show_all_commands() -> None:
+    console.print("Add expense: add {description} {amount} {date:optional}")
+    console.print("Show all expenses: all")
+    console.print("Show last expense: last")
+    console.print("Get an expense in the database based on id: on-id {expense_id}")
+    console.print("Delete an expense in the database based on id: delete {expense_id}")
+
+
 @app.command()
 def add(description: str, amount: float, date: str | None = None) -> None:
     """Add an expense. Date (YYYY-MM-DD) is optional, defaults to today's date"""
@@ -65,3 +74,19 @@ def show_expense_on_id(expense_id: int) -> None:
     console.print("Searched for expense with id " + str(expense_id))
     console.print(table)
 
+@app.command("delete")
+def delete_expense(expense_id: int) -> None:
+    """Delete an existing expense from the database based on id"""
+
+    #get the expense to be deleted
+    expense = db.get_expense_on_id(expense_id)
+    if not expense:
+        console.print("no expense with that id")
+        return
+
+    #get the desc and amount
+    expense_desc = expense["description"]
+    expense_amount = expense["amount"]
+
+    db.delete_expense(expense_id)
+    console.print("Deleted expense with id ["+str(expense_id)+"], description: " + expense_desc + ", amount: " + str(expense_amount))
