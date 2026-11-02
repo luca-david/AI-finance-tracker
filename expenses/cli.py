@@ -2,7 +2,7 @@ from datetime import date as date_type
 from rich.console import Console
 from rich.table import Table
 
-from expenses import db
+from expenses import db, ai
 
 import typer
 
@@ -90,3 +90,30 @@ def delete_expense(expense_id: int) -> None:
 
     db.delete_expense(expense_id)
     console.print("Deleted expense with id ["+str(expense_id)+"], description: " + expense_desc + ", amount: " + str(expense_amount))
+
+@app.command("categorize")
+def categorize() -> None:
+    """Categorize all uncategorized expenses using AI"""
+    rows = db.list_expenses(only_uncategorized=True)
+    if not rows:
+        console.print("Nothing to categorize")
+        return
+
+    payload = [
+        {"id": r["id"], "description": r["description"], "amount": r["amount"]}
+        for r in rows
+    ]
+
+    try:
+        with console.status("Categorizing " + str(len(payload)) + " expenses"):
+            #call the api
+            result = ai.categorize(payload)
+    except ai.AIError as e:
+        console.print(f"[red]Error: {e}[/red]")
+        raise typer.Exit(code=1)
+
+    #with the categories made from the ai, we call the setter for category from the db
+    for expense_id, category in result.items():
+        db.set_category(expense_id, category)
+
+    console.print(f"[green]Categorized {len(result)} expenses.[/green]")
